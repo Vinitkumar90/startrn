@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { View,Text,TextInput,Button,FlatList } from "react-native";
+import { SafeAreaView,View,Text,TextInput,Button,FlatList, TouchableOpacity } from "react-native";
 
 export default function App() {
  const[task, setTask] = useState('');
@@ -12,8 +12,12 @@ export default function App() {
   }
  }
 
+ const deleteTask = (indexTodelete) =>{
+  setTasks(tasks.filter((_,idx) => idx != indexTodelete));
+ }
+
   return (
-   <View style={{flex:1, padding:20}}>
+   <SafeAreaView style={{flex:1,padding:20,marginTop:20}}>
     <TextInput
       value={task}
       onChangeText={setTask}
@@ -23,10 +27,20 @@ export default function App() {
     <Button title="Add a task" onPress={addTask} />
     <FlatList
       data={tasks}
-      renderItem={({item}) => <Text>{item}</Text>}
+      renderItem={({item,index}) => (
+        <View style={{flexDirection:'row',justifyContent:'space-between',marginVertical:5}}>
+          <Text>{item}</Text>  
+          <TouchableOpacity onPress={()=> deleteTask(index)}>
+            <Text style={{color:'red'}}>Delete</Text>
+          </TouchableOpacity>
+        </View>
+      )}
       keyExtractor={(item,index)=> index.toString()}
     />
-   </View>
+    <TouchableOpacity onPress={()=>setTasks([])}>
+      <Text> Delete all 😈👿</Text>
+    </TouchableOpacity>
+   </SafeAreaView>
   );
 }
 
